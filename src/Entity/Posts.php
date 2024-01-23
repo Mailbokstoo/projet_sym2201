@@ -27,6 +27,12 @@ class Posts
     #[ORM\ManyToMany(targetEntity: Tags::class, inversedBy: 'fk_posts')]
     private Collection $fk_tags;
 
+    #[ORM\ManyToOne(inversedBy: 'fk_posts')]
+    private ?User $fk_user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'fk_posts')]
+    private ?Team $fk_team = null;
+
     public function __construct()
     {
         $this->fk_tags = new ArrayCollection();
@@ -93,6 +99,30 @@ class Posts
     public function removeFkTag(Tags $fkTag): static
     {
         $this->fk_tags->removeElement($fkTag);
+
+        return $this;
+    }
+
+    public function getFkUser(): ?User
+    {
+        return $this->fk_user;
+    }
+
+    public function setFkUser(?User $fk_user): static
+    {
+        $this->fk_user = $fk_user;
+
+        return $this;
+    }
+
+    public function getFkTeam(): ?Team
+    {
+        return $this->fk_team;
+    }
+
+    public function setFkTeam(?Team $fk_team): static
+    {
+        $this->fk_team = $fk_team;
 
         return $this;
     }

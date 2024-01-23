@@ -5,51 +5,74 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_team_provider:
-            entity:
-                class: App\Entity\Team
-                property: email
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
+        app_team_provider:
+            entity:
+                class: App\Entity\Team
+                property: email
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            lazy: true        
-        user:
-            lazy: true
-            provider: app_user_provider
-            custom_authenticator: App\Security\AppUserAuthenticator
+        admin_secure_area:
+            pattern: ^/admin
+            provider: app_team_provider
+            form_login:
+                login_path: app_login_team
+                check_path: app_login_team
+                default_target_path: app_admin
+                username_parameter: login[email]
+                password_parameter: login[password]
+                enable_csrf: true
             logout:
-                path: app_logout_user
-                target: app_home
-                invalidate_session: true
-
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
-                path: /
-                always_remember_me: true
-        team:
-            lazy: true
-            provider: app_user_provider
-            custom_authenticator: App\Security\AppTeamAuthenticator
-            logout:
-                path: app_logout_team
-                target: app_home
-                invalidate_session: true
+                path: admin_logout
                 # where to redirect after logout
-                # target: app_any_route
+                target: admin_login
+                invalidate_session: true
+            # configuring the maximum login attempts (per minute)
+            login_throttling:
+                max_attempts: 3
+            custom_authenticator: App\Security\AppTeamAuthenticator
+            entry_point: form_login
 
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
                 always_remember_me: true
+
+        user_secure_area:
+            pattern: ^/
+            provider: app_user_provider
+            form_login:
+                login_path: app_login_user
+                check_path: app_login_user
+                default_target_path: app_account
+                username_parameter: login[email]
+                password_parameter: login[password]
+                enable_csrf: true
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                target: app_home
+                invalidate_session: true
+            # configuring the maximum login attempts (per minute)
+            login_throttling:
+                max_attempts: 3
+            custom_authenticator: App\Security\AppUserAuthenticator
+            entry_point: form_login
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                always_remember_me: true
+
+        main:
+            lazy: true
+            pattern: ^/
+            provider: app_user_provider
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -59,9 +82,18 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
+    role_hierarchy:
+        ROLE_IDENTIFIED: ROLE_USER
+        ROLE_CUSTOMER:  ROLE_IDENTIFIED
+        ROLE_ADMIN_CUSTOMER:    ROLE_CUSTOMER
+        ROLE_ADMIN:       ROLE_ADMIN_CUSTOMER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
     access_control:
-        #- { path: ^/admin, roles: ROLE_ADMIN }
-        #- { path: ^/, roles: ROLE_USER }
+        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_IDENTIFIED }
 
 when@test:
     security:

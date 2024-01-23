@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -33,6 +35,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 60)]
     private ?string $lastname = null;
+
+    #[ORM\OneToMany(mappedBy: 'fk_user', targetEntity: Posts::class)]
+    private Collection $fk_posts;
+
+    public function __construct()
+    {
+        $this->fk_posts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,6 +134,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Posts>
+     */
+    public function getFkPosts(): Collection
+    {
+        return $this->fk_posts;
+    }
+
+    public function addFkPost(Posts $fkPost): static
+    {
+        if (!$this->fk_posts->contains($fkPost)) {
+            $this->fk_posts->add($fkPost);
+            $fkPost->setFkUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkPost(Posts $fkPost): static
+    {
+        if ($this->fk_posts->removeElement($fkPost)) {
+            // set the owning side to null (unless already changed)
+            if ($fkPost->getFkUser() === $this) {
+                $fkPost->setFkUser(null);
+            }
+        }
 
         return $this;
     }

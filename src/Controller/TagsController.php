@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Tags;
-use App\Form\Tags1Type;
+use App\Form\TagsType;
 use App\Repository\TagsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +26,7 @@ class TagsController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $tag = new Tags();
-        $form = $this->createForm(Tags1Type::class, $tag);
+        $form = $this->createForm(TagsType::class, $tag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -53,7 +53,7 @@ class TagsController extends AbstractController
     #[Route('/{id}/edit', name: 'app_tags_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Tags $tag, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(Tags1Type::class, $tag);
+        $form = $this->createForm(TagsType::class, $tag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
