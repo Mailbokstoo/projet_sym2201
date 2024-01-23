@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Posts;
-use App\Form\Posts1Type;
+use App\Form\PostsType;
 use App\Repository\PostsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +26,7 @@ class PostsController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $post = new Posts();
-        $form = $this->createForm(Posts1Type::class, $post);
+        $form = $this->createForm(PostsType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -53,7 +53,7 @@ class PostsController extends AbstractController
     #[Route('/{id}/edit', name: 'app_posts_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Posts $post, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(Posts1Type::class, $post);
+        $form = $this->createForm(PostsType::class, $post);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
