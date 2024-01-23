@@ -21,16 +21,21 @@ class PostsType extends AbstractType
             ->add('picture')
             ->add('fk_tags', EntityType::class, [
                 'class' => Tags::class,
-'choice_label' => 'id',
-'multiple' => true,
+                'choice_label' => 'id',
+                'multiple' => true,
+                'expanded' => true
             ])
             ->add('fk_user', EntityType::class, [
                 'class' => User::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
+                'required' => false, 
+                'placeholder' => "vide"
             ])
             ->add('fk_team', EntityType::class, [
                 'class' => Team::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
+                'required' => false,
+                'placeholder' => "vide"
             ])
         ;
     }

@@ -24,9 +24,9 @@ class UserSecurityController extends AbstractController
         return $this->render('security/login_user.html.twig', ['last_username' => $lastUsername]);
     }
 
-    #[Route(path: '/logout', name: 'app_logout_user')]
+    #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): Response
     {
-        return $this->render('security/login_user.html.twig');
+        return $this->render('index.html.twig');
     }
 }

@@ -25,9 +25,9 @@ class TeamSecurityController extends AbstractController
         return $this->render('security/login_team.html.twig', ['last_username' => $lastUsername]);
     }
 
-    #[Route(path: '/logout', name: 'app_logout_team')]
+    #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): Response
     {
-        return $this->render('security/login_team.html.twig');
+        return $this->render('index.html.twig');
     }
 }
