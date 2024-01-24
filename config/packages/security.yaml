@@ -93,7 +93,8 @@ security:
         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: PUBLIC_ACCESS }
+        - { path: ^/home, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_IDENTIFIED }
 
 when@test:
     security:

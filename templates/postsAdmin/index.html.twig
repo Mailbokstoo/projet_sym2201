@@ -23,9 +23,11 @@
                 <td>{{ post.title }}</td>
                 <td>{{ post.content }}</td>
                 <td>{{ post.picture }}</td>
+                <td>{{ post.fkUser ? post.fkUser.email : post.fkTeam ? post.fkTeam.email : null}}</td>
                 <td>
                     <a href="{{ path('app_posts_show', {'id': post.id}) }}">show</a>
                     <a href="{{ path('app_posts_edit', {'id': post.id}) }}">edit</a>
+                      <a class="btn btn-info" data-toggle="collapse" href="{{ path('app_admin_posts_index', {'id': post.fkUser ? post.fkUser.id }) }}" role="button" aria-expanded="false" aria-controls="collapseExample">voir tous les postes pour ce membre</a>
                 </td>
             </tr>
         {% else %}

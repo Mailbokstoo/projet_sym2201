@@ -14,11 +14,16 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/admin/posts')]
 class PostsAdminController extends AbstractController
 {
-    #[Route('/', name: 'app_admin_posts_index', methods: ['GET'])]
-    public function index(PostsRepository $postsRepository): Response
+    #[Route('/{id?}', name: 'app_admin_posts_index', methods: ['GET'])]
+    public function index(PostsRepository $postsRepository, $id): Response
     {
+        if($id !== null) {
+            $posts = $postsRepository->findBy(["fk_user" => $id]);
+        } else {
+            $posts = $postsRepository->findAll();
+        }
         return $this->render('postsAdmin/index.html.twig', [
-            'posts' => $postsRepository->findAll(),
+            'posts' => $posts,
         ]);
     }
 

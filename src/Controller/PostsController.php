@@ -10,15 +10,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/posts')]
 class PostsController extends AbstractController
 {
     #[Route('/', name: 'app_posts_index', methods: ['GET'])]
-    public function index(PostsRepository $postsRepository): Response
+    public function index(PostsRepository $postsRepository, UserInterface $user): Response
     {
         return $this->render('posts/index.html.twig', [
-            'posts' => $postsRepository->findBy(['fk_user' => ['IS NOT NULL']]),
+            'posts' => $postsRepository->findBy(["fk_user" => $user->getId()]),
         ]);
     }
 

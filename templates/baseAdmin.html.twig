@@ -30,14 +30,21 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ path('app_posts_index') }}">Posts</a>
             </li>
+            {% if app.user.id is defined %}
+            <li class="nav-item">
+                <a class="btn btn-danger" data-toggle="collapse" href="{{ path('app_logout') }}" role="button" aria-expanded="false" aria-controls="collapseExample">Se déconnecter</a>
+            </li>
+            {% endif %}
           </ul>
         </div>
       </div>
     </nav>
-
-    <div class="alert alert-primary" role="alert">
-      Espace Admin
+    <div class="container">
+      <div class="alert alert-danger" role="alert">
+        Espace Admin
+      </div>
     </div>
+
         {% block body %}{% endblock %}
     </body>
 </html>
